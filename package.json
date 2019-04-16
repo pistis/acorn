@@ -33,6 +33,8 @@
     "lint": "eslint acorn/src/ acorn-walk/src/ acorn-loose/src/"
   },
   "devDependencies": {
+    "acorn-bigint": "^0.4.0",
+    "acorn-jsx": "^5.0.1",
     "eslint": "^4.10.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.2.0",
