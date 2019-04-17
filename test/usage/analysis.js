@@ -1,5 +1,6 @@
-const acorn = require("../../acorn")
-const walk = require("../../acorn-walk")
+// https://astexplorer.net/
+const acorn = require("../../acorn/dist/acorn")
+const walk = require("../../acorn-walk/dist/walk")
 const fs = require('fs')
 const path = require('path')
 
@@ -11,12 +12,11 @@ program = fs.readFileSync(vanilla, 'utf-8')
 // 바닐라 module type 소스코드 파싱
 const parsed = acorn.parse(program, {
   sourceType: 'module',
-  ecmaVersion: 7
+  ecmaVersion: 9
 })
 
-// console.log(JSON.stringify(parsed, null, 2))
-
-// AST walk
-walk.full(parsed, (node, state, type) => {
-  console.log(`${Object.keys(node)} | ${state} | ${type}`)
+walk.simple(acorn.parse("this.data['test']"), {
+  MemberExpression(node, state) {
+    console.log('MemberExpression', JSON.stringify(node, null, 2))
+  }
 })
