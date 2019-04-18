@@ -8,6 +8,8 @@ const extractClassname = require('./extractor/classname')
 const extractMethodname = require('./extractor/methodname')
 const extractVariablename = require('./extractor/variablename')
 const extractParametername = require('./extractor/parametername')
+const extractArgumentsname = require('./extractor/argumentsname')
+const extractAttributename = require('./extractor/attributename')
 
 const resolve = file => path.resolve(__dirname, file)
 
@@ -53,26 +55,36 @@ const analysisNames = function (fileList) {
       sourceType: 'module',
       ecmaVersion: 9
     })
-    const classNameMap = extractClassname(ast)
-    const methodNameMap = extractMethodname(ast)
-    const variableNameMap = extractVariablename(ast)
-    const parameterNameMap = extractParametername(ast)
-    
-    console.log(file)
-    console.log('Class Names', classNameMap)
-    console.log('Method Names', methodNameMap)
-    console.log('Variable Names', variableNameMap)
-    console.log('Parameter Names', parameterNameMap)
-    
+    try {
+      const classNameMap = extractClassname(ast)
+      const methodNameMap = extractMethodname(ast)
+      const variableNameMap = extractVariablename(ast)
+      const parameterNameMap = extractParametername(ast)
+      const argumentsNameMap = extractArgumentsname(ast)
+      const attributeNameMap = extractAttributename(ast)
+
+      console.log(file)
+      console.log('Class Names', classNameMap)
+      console.log('Method Names', methodNameMap)
+      console.log('Variable Names', variableNameMap)
+      console.log('Parameter Names', parameterNameMap)
+      console.log('Arguments Names', argumentsNameMap)
+      console.log('Attribute Names', attributeNameMap)
+    } catch(e) {
+      console.log(file)
+      console.error(e)
+      process.exit()
+    }
   })
 }
 let fileList = getJavascriptFileList(resolve('./data/vuex/src'))
-fileList = [resolve('./data/vuex/src/helpers.js')]
-fileList = [resolve('./data/vuex/src/index.esm.js')]
-fileList = [resolve('./data/vuex/src/index.js')]
+// fileList = [resolve('./data/vuex/src/helpers.js')]
+// fileList = [resolve('./data/vuex/src/index.esm.js')]
+// fileList = [resolve('./data/vuex/src/index.js')]
 fileList = [resolve('./data/vuex/src/mixin.js')]
-fileList = [resolve('./data/vuex/src/store.js')]
-fileList = [resolve('./data/vuex/src/util.js')]
+// fileList = [resolve('./data/vuex/src/store.js')]
+// fileList = [resolve('./data/vuex/src/util.js')]
+// fileList = [resolve('./data/vuex/src/plugins/logger.js')]
 
 analysisNames(fileList)
 // analysisASTTypes(fileList)

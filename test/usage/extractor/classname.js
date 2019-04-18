@@ -1,5 +1,7 @@
 // https://astexplorer.net/
 // https://doc.esdoc.org/github.com/mason-lang/esast/class/src/ast.js~ClassDeclaration.html
+
+// TODO : new 로 호출되는 것도 Class로 취급? NewExpression, 단, 취급한다면 reserved word(built in 요소들)은 제거해야 한다.
 const walk = require("../../../acorn-walk/dist/walk")
 
 const extractClassname = function (ast) {

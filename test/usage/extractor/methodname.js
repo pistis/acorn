@@ -18,6 +18,7 @@ const extractMethodname = function (ast) {
       }
     },
     FunctionDeclaration(node, state) {
+      if (!node.id) return  // 익명함수
       const { type, name } = node.id
       if (type !== 'Identifier') return 
       if (names.has(name)) {

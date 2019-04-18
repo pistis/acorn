@@ -25,6 +25,20 @@ const extractParametername = function (ast) {
           }
         }
       })
+    },
+    ArrowFunctionExpression(node, state) {
+      const { params } = node
+      if (!params || params.length === 0) return
+
+      params.forEach((param) => {
+        if (param.type === 'Identifier') {
+          setName(param.name)
+        } else if (param.type === 'AssignmentPattern') {
+          if (param.left && param.left.type === 'Identifier') {
+            setName(param.left.name)
+          }
+        }
+      })
     }
   })
 
