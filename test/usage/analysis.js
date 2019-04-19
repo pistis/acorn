@@ -44,11 +44,28 @@ const analysisASTTypes = function (fileList) {
   console.log('All Types', types)
 }
 
+const classNames = new Map()
+const methodNames = new Map()
+const variableNames = new Map()
+const parameterNames = new Map()
+const argumentsNames = new Map()
+const attributeNames = new Map()
+
+const addResult = function(results, maps) {
+  // console.log(maps)
+  maps.forEach((value, key) => {
+    if (results.has(key)) {
+      results.set(key, results.get(key) + 1)
+    } else {
+      results.set(key, 1)
+    }
+  })
+}
 const analysisNames = function (fileList) {
   fileList.forEach((file, idx) =>{
-    if(idx > 10){
-      return
-    }
+    // if(idx > 10){
+    //   return
+    // }
     
     const program = fs.readFileSync(file, 'utf-8')
     const ast = acorn.parse(program, {
@@ -56,35 +73,50 @@ const analysisNames = function (fileList) {
       ecmaVersion: 9
     })
     try {
-      const classNameMap = extractClassname(ast)
-      const methodNameMap = extractMethodname(ast)
-      const variableNameMap = extractVariablename(ast)
-      const parameterNameMap = extractParametername(ast)
-      const argumentsNameMap = extractArgumentsname(ast)
-      const attributeNameMap = extractAttributename(ast)
+      addResult(classNames, extractClassname(ast))
+      addResult(methodNames, extractMethodname(ast))
+      addResult(variableNames, extractVariablename(ast))
+      addResult(parameterNames, extractParametername(ast))
+      addResult(argumentsNames, extractArgumentsname(ast))
+      addResult(attributeNames, extractAttributename(ast))
 
-      console.log(file)
-      console.log('Class Names', classNameMap)
-      console.log('Method Names', methodNameMap)
-      console.log('Variable Names', variableNameMap)
-      console.log('Parameter Names', parameterNameMap)
-      console.log('Arguments Names', argumentsNameMap)
-      console.log('Attribute Names', attributeNameMap)
+      // console.log(file)
+      // console.log('Class Names', classNameMap)
+      // console.log('Method Names', methodNameMap)
+      // console.log('Variable Names', variableNameMap)
+      // console.log('Parameter Names', parameterNameMap)
+      // console.log('Arguments Names', argumentsNameMap)
+      // console.log('Attribute Names', attributeNameMap)
     } catch(e) {
       console.log(file)
       console.error(e)
       process.exit()
     }
   })
+
+  console.log(methodNames)
+  const list = []
+  variableNames.forEach((value, key) => {
+    list.push(`${key} ${value}`)
+  })
+
+  fs.writeFileSync(resolve('./results.txt'), list.join('\n'), {
+    encoding : 'utf8',
+    flag : 'w+'
+  })
 }
 let fileList = getJavascriptFileList(resolve('./data/vuex/src'))
+// fileList = getJavascriptFileList(resolve('/Users/lineplus/Desktop/dev/company/LINE-Search/src'))
 // fileList = [resolve('./data/vuex/src/helpers.js')]
 // fileList = [resolve('./data/vuex/src/index.esm.js')]
 // fileList = [resolve('./data/vuex/src/index.js')]
-fileList = [resolve('./data/vuex/src/mixin.js')]
+// fileList = [resolve('./data/vuex/src/mixin.js')]
 // fileList = [resolve('./data/vuex/src/store.js')]
 // fileList = [resolve('./data/vuex/src/util.js')]
 // fileList = [resolve('./data/vuex/src/plugins/logger.js')]
+// fileList = [resolve('./data/vuex/src/module/module-collection.js')]
+// fileList = [resolve('/Users/lineplus/Desktop/dev/company/LINE-Search/src/client/js/common/is.js')]
 
+console.log(`${fileList.length} file list anaysis`)
 analysisNames(fileList)
 // analysisASTTypes(fileList)
